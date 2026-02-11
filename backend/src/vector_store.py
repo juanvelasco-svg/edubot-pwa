@@ -1,4 +1,4 @@
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from typing import List, Optional
 from .config import settings
@@ -11,19 +11,22 @@ class VectorStoreManager:
     def __init__(self):
         self.embeddings = None
         self.vectorstore = None
-        self._initialize_embeddings()
+        # NO inicializar aquí para evitar descarga en build
     
     def _initialize_embeddings(self):
-        """Usa embeddings integrados de LangChain (sin descargas)"""
-        try:
-            logger.info("Inicializando embeddings básicos...")
-            # Usa embeddings simples integrados
-            from langchain_community.embeddings import FakeEmbeddings
-            self.embeddings = FakeEmbeddings(size=768)
-            logger.info("✓ Embeddings básicos inicializados")
-        except Exception as e:
-            logger.error(f"Error inicializando embeddings: {str(e)}")
-            raise
+        """Inicializa embeddings SOLO cuando se necesiten"""
+        if self.embeddings is None:
+            try:
+                logger.info("Inicializando embeddings (modelo pequeño 80MB)...")
+                self.embeddings = HuggingFaceEmbeddings(
+                    model_name="all-MiniLM-L6-v2",  # ✅ 80MB vs 900MB
+                    model_kwargs={'device': 'cpu'},
+                    encode_kwargs={'normalize_embeddings': True}
+                )
+                logger.info("✓ Embeddings inicializados")
+            except Exception as e:
+                logger.error(f"Error inicializando embeddings: {str(e)}")
+                raise
     
     def create_vectorstore(self, documents: List):
         if not documents:
@@ -32,7 +35,13 @@ class VectorStoreManager:
         logger.info(f"Creando vectorstore con {len(documents)} documentos...")
         
         try:
-            self.vectorstore = FAISS.from_documents(documents, self.embeddings)
+            self._initialize_embeddings()
+            persist_directory = os.path.join(os.getcwd(), settings.vectorstore_path)
+            self.vectorstore = Chroma.from_documents(
+                documents=documents,
+                embedding=self.embeddings,
+                persist_directory=persist_directory
+            )
             logger.info("✓ Vectorstore creado")
             return self.vectorstore
             
@@ -43,18 +52,9 @@ class VectorStoreManager:
     def save_vectorstore(self):
         if not self.vectorstore:
             raise ValueError("No hay vectorstore")
-        
-        try:
-            logger.info(f"Guardando vectorstore...")
-            persist_directory = os.path.join(os.getcwd(), settings.vectorstore_path)
-            os.makedirs(persist_directory, exist_ok=True)
-            self.vectorstore.save_local(persist_directory)
-            logger.info("✓ Vectorstore guardado")
-        except Exception as e:
-            logger.error(f"Error guardando: {str(e)}")
-            raise
+        # ChromaDB persiste automáticamente
     
-    def load_vectorstore(self) -> Optional[FAISS]:
+    def load_vectorstore(self) -> Optional[Chroma]:
         persist_directory = os.path.join(os.getcwd(), settings.vectorstore_path)
         
         if not os.path.exists(persist_directory):
@@ -63,10 +63,10 @@ class VectorStoreManager:
         
         try:
             logger.info("Cargando vectorstore...")
-            self.vectorstore = FAISS.load_local(
-                persist_directory,
-                self.embeddings,
-                allow_dangerous_deserialization=True
+            self._initialize_embeddings()
+            self.vectorstore = Chroma(
+                persist_directory=persist_directory,
+                embedding_function=self.embeddings
             )
             logger.info("✓ Vectorstore cargado")
             return self.vectorstore

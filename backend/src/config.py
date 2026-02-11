@@ -3,7 +3,7 @@ import os
 
 class Settings(BaseSettings):
     groq_api_key: str
-    model_name: str = "llama-3.1-8b-instant"
+    model_name: str = "llama-3.1-8b-instant"  # ✅ MANTENER
     max_tokens: int = 800
     temperature: float = 0.3
     chunk_size: int = 800

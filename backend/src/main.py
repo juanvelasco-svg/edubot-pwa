@@ -33,11 +33,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="EduBot API",
-    description="API para chatbot educativo",
+    description="API para chatbot educativo RAG",
     version="1.0.0",
     lifespan=lifespan
 )
 
+# Permitir frontend de Vercel
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -78,29 +79,12 @@ async def chat(request: Request, chat_request: ChatRequest):
     
     try:
         response = app.state.edubot.get_response(chat_request.message)
-        
-        return ChatResponse(
-            response=response,
-            conversation_id=chat_request.conversation_id
-        )
+        return ChatResponse(response=response)
         
     except Exception as e:
         logger.error(f"Error en /chat: {str(e)}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Error no manejado: {str(exc)}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Error interno del servidor"}
-    )
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=False
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
