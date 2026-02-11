@@ -1,2 +1,29 @@
+# FastAPI y servidor
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
+
+# LangChain y RAG
+langchain==0.1.16
+langchain-community==0.0.34
+langchain-groq==0.1.1
+
+# Base de datos vectorial
+faiss-cpu==1.13.2
+
+# Embeddings
+sentence-transformers==2.3.1
+
+# Procesamiento de PDF
+pypdf==4.0.1
+
+# Utilidades
+python-multipart==0.0.6
+python-dotenv==1.0.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Rate limiting
+slowapi==0.1.9
+
+# CORS
+python-multipart==0.0.6
