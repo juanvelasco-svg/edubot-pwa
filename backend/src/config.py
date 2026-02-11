@@ -3,7 +3,7 @@ import os
 
 class Settings(BaseSettings):
     groq_api_key: str
-    model_name: str = "llama-3.1-8b-instant"  # ✅ MANTENER este valor
+    model_name: str = "llama-3.1-8b-instant"
     max_tokens: int = 800
     temperature: float = 0.3
     chunk_size: int = 800
@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     top_k: int = 4
     documents_path: str = "documentos"
     vectorstore_path: str = "vectorstore"
-    rate_limit_per_minute: int = 10
     
     class Config:
         env_file = ".env"

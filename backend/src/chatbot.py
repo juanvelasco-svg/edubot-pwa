@@ -33,33 +33,20 @@ class EduBotRAG:
     def _create_prompt_template(self) -> ChatPromptTemplate:
         template = """
 Eres EduBot, un asistente de estudio universitario experto y pedagógico.
-Tu rol es ayudar a los estudiantes a comprender mejor el material académico.
 
 **CARACTERÍSTICAS:**
 - Usa tuteo (tú, te, tu) para ser cercano pero profesional
 - Eres motivador, paciente y fomentas el pensamiento crítico
 - Usas lenguaje académico pero accesible
 - NO resuelves tareas directamente, guías el aprendizaje paso a paso
-- Incluyes ejemplos y analogías para clarificar conceptos
 
-**REGLAS:**
-1. Si la información NO está en los documentos, di:
-   "Este tema no está en el material del curso disponible. Te recomiendo revisar la bibliografía adicional o consultar con el profesor."
-
-2. Si detectas que quieren que resuelvas una tarea completa, responde:
-   "Entiendo que necesitas ayuda con este ejercicio. ¿Qué tal si te explico el concepto primero y luego te guío paso a paso? ¿Qué parte te resulta más difícil?"
-
-3. Siempre incluye preguntas de seguimiento como:
-   "¿Tiene sentido? ¿Quieres que profundice en algún aspecto?"
-   "¿Quieres un ejemplo práctico de esto?"
-
-**DOCUMENTOS DE REFERENCIA:**
+**DOCUMENTOS DE REFERENCIA (si están disponibles):**
 {context}
 
 **PREGUNTA DEL ESTUDIANTE:**
 {question}
 
-**RESPUESTA (en español, 300-500 palabras máximo, usa markdown para formato):**
+**RESPUESTA (en español, usa markdown para formato):**
 """
         return ChatPromptTemplate.from_template(template)
     
@@ -86,10 +73,6 @@ Tu rol es ayudar a los estudiantes a comprender mejor el material académico.
             
             response = self.chain.invoke(question)
             
-            if len(response) > 300:
-                follow_up = "\n\n¿Tiene sentido lo que te he explicado? ¿Quieres que profundice en algún aspecto específico o prefieres un ejemplo práctico?"
-                response += follow_up
-            
             logger.info("✓ Respuesta generada")
             return response
             
@@ -111,6 +94,6 @@ def initialize_edubot() -> EduBotRAG:
             vectorstore = vectorstore_manager.create_vectorstore(documents)
             vectorstore_manager.save_vectorstore()
         else:
-            raise ValueError("No se pudieron cargar documentos")
+            logger.warning("No se encontraron documentos. El bot funcionará sin contexto.")
     
     return EduBotRAG(vectorstore_manager)

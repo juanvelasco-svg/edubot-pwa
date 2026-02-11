@@ -1,9 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
 from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from typing import Optional
@@ -14,12 +11,10 @@ from .config import settings
 from .chatbot import initialize_edubot, EduBotRAG
 
 logging.basicConfig(
-    level=getattr(logging, "INFO", "INFO"),
+    level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-limiter = Limiter(key_func=get_remote_address)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,7 +33,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="EduBot API",
-    description="API para chatbot educativo RAG",
+    description="API para chatbot educativo",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -50,15 +45,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.state.limiter = limiter
-
-@app.exception_handler(RateLimitExceeded)
-async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
-    return JSONResponse(
-        status_code=429,
-        content={"detail": "Demasiadas solicitudes. Por favor, espera un momento."}
-    )
 
 class ChatRequest(BaseModel):
     message: str
@@ -83,7 +69,6 @@ async def health_check():
     }
 
 @app.post("/chat", response_model=ChatResponse)
-@limiter.limit("10/minute")
 async def chat(request: Request, chat_request: ChatRequest):
     if not app.state.edubot:
         raise HTTPException(
