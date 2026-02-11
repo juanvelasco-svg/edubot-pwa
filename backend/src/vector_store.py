@@ -1,4 +1,4 @@
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from typing import List, Optional
 from .config import settings
@@ -26,14 +26,19 @@ class VectorStoreManager:
             logger.error(f"Error inicializando embeddings: {str(e)}")
             raise
     
-    def create_vectorstore(self, documents: List) -> FAISS:
+    def create_vectorstore(self, documents: List):
         if not documents:
             raise ValueError("No hay documentos")
         
         logger.info(f"Creando vectorstore con {len(documents)} documentos...")
         
         try:
-            self.vectorstore = FAISS.from_documents(documents, self.embeddings)
+            persist_directory = os.path.join(os.getcwd(), settings.vectorstore_path)
+            self.vectorstore = Chroma.from_documents(
+                documents=documents,
+                embedding=self.embeddings,
+                persist_directory=persist_directory
+            )
             logger.info("✓ Vectorstore creado")
             return self.vectorstore
             
@@ -47,23 +52,24 @@ class VectorStoreManager:
         
         try:
             logger.info(f"Guardando vectorstore...")
-            self.vectorstore.save_local(settings.vectorstore_path)
+            self.vectorstore.persist()
             logger.info("✓ Vectorstore guardado")
         except Exception as e:
             logger.error(f"Error guardando: {str(e)}")
             raise
     
-    def load_vectorstore(self) -> Optional[FAISS]:
-        if not os.path.exists(settings.vectorstore_path):
+    def load_vectorstore(self) -> Optional[Chroma]:
+        persist_directory = os.path.join(os.getcwd(), settings.vectorstore_path)
+        
+        if not os.path.exists(persist_directory):
             logger.warning("Vectorstore no encontrado")
             return None
         
         try:
             logger.info("Cargando vectorstore...")
-            self.vectorstore = FAISS.load_local(
-                settings.vectorstore_path,
-                self.embeddings,
-                allow_dangerous_deserialization=True
+            self.vectorstore = Chroma(
+                persist_directory=persist_directory,
+                embedding_function=self.embeddings
             )
             logger.info("✓ Vectorstore cargado")
             return self.vectorstore
