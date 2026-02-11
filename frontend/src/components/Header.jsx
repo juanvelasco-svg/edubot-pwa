@@ -7,7 +7,7 @@ const Header = ({ showInstallButton, onInstallClick }) => {
         <div className="flex items-center space-x-3">
           <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-xl">
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-              <span className="text-blue-600 font-bold text-xl">📚</span>
+              <span className="text-blue-600 font-bold text-xl">E</span>
             </div>
           </div>
           <div>
@@ -22,7 +22,6 @@ const Header = ({ showInstallButton, onInstallClick }) => {
             className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:opacity-90 transition-opacity flex items-center space-x-2 shadow-md"
             aria-label="Instalar aplicación"
           >
-            <span>📱</span>
             <span>Agregar a inicio</span>
           </button>
         )}

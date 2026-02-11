@@ -28,7 +28,7 @@ const InputBox = ({ onSendMessage, onClearChat, disabled }) => {
         title="Nueva conversación"
         disabled={disabled}
       >
-        ✨ Nuevo tema
+        Nuevo tema
       </button>
 
       <div className="flex-1 relative">
@@ -59,9 +59,9 @@ const InputBox = ({ onSendMessage, onClearChat, disabled }) => {
         aria-label="Enviar mensaje"
       >
         {disabled ? (
-          <span className="animate-spin">⏳</span>
+          <span className="animate-spin">...</span>
         ) : (
-          '➤'
+          'Enviar'
         )}
       </button>
     </form>

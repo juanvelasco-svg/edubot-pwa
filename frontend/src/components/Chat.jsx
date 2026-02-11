@@ -12,17 +12,17 @@ const Chat = () => {
   useEffect(() => {
     const welcomeMessage = {
       id: 'welcome',
-      content: 📚 ¡Hola! Soy tu Asistente de Estudio
+      content: Hola! Soy tu Asistente de Estudio
 
 Estoy aquí para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos académicos.
 
-💡 Puedo ayudarte a:
+Puedo ayudarte a:
 - Explicar conceptos del temario
 - Aclarar dudas específicas  
 - Repasar temas antes del examen
 - Relacionar ideas entre diferentes temas
 
-🎯 Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
+Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
 
 ¿Qué tema quieres explorar hoy?,
       sender: 'bot',
@@ -78,17 +78,17 @@ Estoy aquí para ayudarte a comprender mejor el material del curso. Tengo acceso
       setMessages([])
       const welcomeMessage = {
         id: 'welcome',
-        content: 📚 ¡Hola! Soy tu Asistente de Estudio
+        content: Hola! Soy tu Asistente de Estudio
 
 Estoy aquí para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos académicos.
 
-💡 Puedo ayudarte a:
+Puedo ayudarte a:
 - Explicar conceptos del temario
 - Aclarar dudas específicas  
 - Repasar temas antes del examen
 - Relacionar ideas entre diferentes temas
 
-🎯 Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
+Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
 
 ¿Qué tema quieres explorar hoy?,
         sender: 'bot',

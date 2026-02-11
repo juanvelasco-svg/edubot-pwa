@@ -14,7 +14,7 @@ const Message = ({ message, onRegenerate }) => {
       <div className={max-w-[85%] }>
         {isBot && (
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-2">
-            <span className="text-white font-bold">📚</span>
+            <span className="text-white font-bold">E</span>
           </div>
         )}
 
@@ -43,7 +43,7 @@ const Message = ({ message, onRegenerate }) => {
               className="text-xs text-blue-500 hover:text-purple-600 transition-colors"
               title="Regenerar respuesta"
             >
-              ♻️ Regenerar
+              Regenerar
             </button>
           )}
         </div>
