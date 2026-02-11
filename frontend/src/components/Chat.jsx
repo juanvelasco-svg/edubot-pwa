@@ -12,19 +12,7 @@ const Chat = () => {
   useEffect(() => {
     const welcomeMessage = {
       id: 'welcome',
-      content: Hola! Soy tu Asistente de Estudio
-
-Estoy aquí para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos académicos.
-
-Puedo ayudarte a:
-- Explicar conceptos del temario
-- Aclarar dudas específicas  
-- Repasar temas antes del examen
-- Relacionar ideas entre diferentes temas
-
-Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
-
-¿Qué tema quieres explorar hoy?,
+      content: 'Hola! Soy tu Asistente de Estudio\n\nEstoy aqui para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos academicos.\n\nPuedo ayudarte a:\n- Explicar conceptos del temario\n- Aclarar dudas especificas\n- Repasar temas antes del examen\n- Relacionar ideas entre diferentes temas\n\nRecuerda: aprenderas mejor si razonamos juntos. No estoy aqui para hacer tu tarea, sino para guiarte.\n\nQue tema quieres explorar hoy?',
       sender: 'bot',
       timestamp: new Date()
     }
@@ -66,7 +54,7 @@ Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu ta
 
       setMessages(prev => [...prev, botMessage])
     } catch (err) {
-      setError('Error al conectar con el servidor. Por favor, inténtalo de nuevo.')
+      setError('Error al conectar con el servidor. Por favor, intentalo de nuevo.')
       console.error('Error:', err)
     } finally {
       setIsLoading(false)
@@ -74,23 +62,11 @@ Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu ta
   }
 
   const handleClearChat = () => {
-    if (confirm('¿Quieres empezar una nueva conversación?')) {
+    if (confirm('Quieres empezar una nueva conversacion?')) {
       setMessages([])
       const welcomeMessage = {
         id: 'welcome',
-        content: Hola! Soy tu Asistente de Estudio
-
-Estoy aquí para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos académicos.
-
-Puedo ayudarte a:
-- Explicar conceptos del temario
-- Aclarar dudas específicas  
-- Repasar temas antes del examen
-- Relacionar ideas entre diferentes temas
-
-Recuerda: aprenderás mejor si razonamos juntos. No estoy aquí para hacer tu tarea, sino para guiarte.
-
-¿Qué tema quieres explorar hoy?,
+        content: 'Hola! Soy tu Asistente de Estudio\n\nEstoy aqui para ayudarte a comprender mejor el material del curso. Tengo acceso a todos los apuntes y documentos academicos.\n\nPuedo ayudarte a:\n- Explicar conceptos del temario\n- Aclarar dudas especificas\n- Repasar temas antes del examen\n- Relacionar ideas entre diferentes temas\n\nRecuerda: aprenderas mejor si razonamos juntos. No estoy aqui para hacer tu tarea, sino para guiarte.\n\nQue tema quieres explorar hoy?',
         sender: 'bot',
         timestamp: new Date()
       }
